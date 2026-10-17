@@ -1,0 +1,72 @@
+
+# Name displayed in the GitHub Actions tab
+name: Functions in GitHub Actions
+
+# Events that trigger the workflow
+on:
+  push:
+  workflow_dispatch:
+
+# Define workflow jobs
+jobs:
+  functions-demo:
+    # Run on a GitHub-hosted Ubuntu runner
+    runs-on: ubuntu-latest
+
+    steps:
+      # Download repository code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # ==========================================
+      # 1. GENERAL-PURPOSE FUNCTIONS
+      # ==========================================
+
+      # contains() checks whether a string contains a value
+      - name: Contains Function
+        if: ${{ contains(github.ref_name, 'release') }}
+        run: echo "This branch name contains release."
+
+      # startsWith() checks the beginning of a string
+      - name: StartsWith Function
+        if: ${{ startsWith(github.ref_name, 'feature/') }}
+        run: echo "This is a feature branch."
+
+      # endsWith() checks the end of a string
+      - name: EndsWith Function
+        if: ${{ endsWith(github.ref_name, '-prod') }}
+        run: echo "This branch ends with -prod."
+
+      # format() combines values into a formatted string
+      - name: Format Function
+        run: |
+          echo "${{ format('Repository: {0}, Run: {1}', github.repository, github.run_number) }}"
+
+      # join() combines array elements into a string
+      - name: Join Function
+        run: |
+          echo "${{ join(fromJSON('["dev","qa","prod"]'), ', ') }}"
+
+      # ==========================================
+      # 2. STATUS CHECK FUNCTIONS
+      # ==========================================
+
+      # success() is true when previous steps/jobs succeeded
+      - name: Success Function
+        if: ${{ success() }}
+        run: echo "Previous steps completed successfully."
+
+      # failure() runs when a previous step has failed
+      - name: Failure Function
+        if: ${{ failure() }}
+        run: echo "A previous step failed!"
+
+      # cancelled() runs if the workflow has been cancelled
+      - name: Cancelled Function
+        if: ${{ cancelled() }}
+        run: echo "Workflow execution was cancelled."
+
+      # always() attempts to run regardless of the result
+      - name: Always Function
+        if: ${{ always() }}
+        run: echo "This step runs regardless of the previous result."
