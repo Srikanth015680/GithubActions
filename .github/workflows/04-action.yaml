@@ -19,11 +19,6 @@
 ###### PROJECT USING NODE EXAMPLE -->checkout-->Build image-->run Image-->Test--project ###
 
 
-
-
-
-
-
 name: "04 Node.js Docker Pipeline"
 
 on:
