@@ -1,0 +1,17 @@
+
+name: Ignore Demo
+
+on:
+  push:
+    branches-ignore:
+      - "experimental/*"
+      - "temp/*"
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Workflow triggered!"

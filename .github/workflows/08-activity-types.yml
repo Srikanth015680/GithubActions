@@ -1,0 +1,49 @@
+
+# name: Activity Types Demo
+
+# on:
+#   pull_request:
+#     types: [opened, synchronize, reopened]
+#     branches: [main]
+
+# jobs:
+#   demo:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Print Message
+#         run: echo "Pull request activity detected!"
+
+
+
+
+
+name: Filters and Activity Types Demo
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - "backend/**"
+      - "frontend/**"
+      - "Dockerfile"
+      - ".github/workflows/**"
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: Print Event Name
+        run: echo "Event is ${{ github.event_name }}"
+
+      - name: Print Message
+        run: echo "Workflow triggered successfully!"
