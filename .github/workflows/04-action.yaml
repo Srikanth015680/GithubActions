@@ -1,15 +1,58 @@
 
-name: 04 Understanding Actions
+# name: 04 Understanding Actions
 
-on: push
+# on: push
+
+# jobs:
+#   demo-action-job:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout Repo
+#         uses: actions/checkout@v7
+
+#       - name: Print Message
+#         run: echo "Repo Successfully Checked Out"
+
+
+
+###### PROJECT USING NODE EXAMPLE -->checkout-->Build image-->run Image-->Test--project ###
+
+
+
+
+
+
+
+name: "04 Node.js Docker Pipeline"
+
+on:
+  push:
+  workflow_dispatch:
 
 jobs:
-  demo-action-job:
+  node-docker-job:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout repository
       - name: Checkout Repo
         uses: actions/checkout@v7
 
-      - name: Print Message
-        run: echo "Repo Successfully Checked Out"
+      # 2. Build Docker image
+      - name: Build Docker Image
+        run: docker build -t my-node-app .
+
+      # 3. Run Docker container
+      - name: Run Docker Container
+        run: |
+          docker run -d \
+            --name my-node-container \
+            -p 3000:3000 \
+            my-node-app
+
+      # 4. Test application
+      - name: Test Application
+        run: |
+          sleep 5
+          curl --fail http://localhost:3000
