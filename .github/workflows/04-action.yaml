@@ -1,44 +1,34 @@
 
-# name: 04 Understanding Actions
-
-# on: push
-
-# jobs:
-#   demo-action-job:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout Repo
-#         uses: actions/checkout@v7
-
-#       - name: Print Message
-#         run: echo "Repo Successfully Checked Out"
-
-
-
-###### PROJECT USING NODE EXAMPLE -->checkout-->Build image-->run Image-->Test--project ###
-
-
+# Name displayed in the GitHub Actions tab
 name: "04 Node.js Docker Pipeline"
 
+# Events that trigger the workflow
 on:
+  # Run whenever code is pushed to the repository
   push:
+
+  # Allow manual execution from the Actions tab
   workflow_dispatch:
 
+# Define the jobs in this workflow
 jobs:
+  # Unique identifier for this job
   node-docker-job:
+
+    # Run the job on a GitHub-hosted Ubuntu machine
     runs-on: ubuntu-latest
 
+    # Steps run sequentially inside this job
     steps:
-      # 1. Checkout repository
+      # 1. Download the repository files to the runner
       - name: Checkout Repo
         uses: actions/checkout@v7
 
-      # 2. Build Docker image
+      # 2. Build a Docker image using the Dockerfile in the repository root
       - name: Build Docker Image
         run: docker build -t my-node-app .
 
-      # 3. Run Docker container
+      # 3. Start a container from the image in the background
       - name: Run Docker Container
         run: |
           docker run -d \
@@ -46,8 +36,29 @@ jobs:
             -p 3000:3000 \
             my-node-app
 
-      # 4. Test application
+      # 4. Wait for the application to start, then test its HTTP response
       - name: Test Application
         run: |
-          sleep 5
-          curl --fail http://localhost:3000
+          # Try the application for up to approximately 30 seconds
+          for i in {1..10}; do
+            # Send an HTTP request; fail for HTTP status 400 or higher
+            if curl --fail http://localhost:3000/; then
+              echo "Application test passed!"
+              exit 0
+            fi
+
+            # Wait 3 seconds before retrying
+            sleep 3
+          done
+
+          # Mark the job as failed if the application never responds successfully
+          echo "Application test failed!"
+          docker logs my-node-container
+          exit 1
+
+      # 5. Clean up the container after a successful test
+      - name: Stop and Remove Container
+        if: always()
+        run: |
+          docker stop my-node-container || true
+          docker rm my-node-container || true

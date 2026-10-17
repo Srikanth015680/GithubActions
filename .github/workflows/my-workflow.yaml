@@ -1,20 +1,38 @@
 
+# Name displayed in the GitHub Actions tab
 name: My First Workflow
+
+# Trigger the workflow whenever code is pushed
 on: push
 
+# Define all jobs in this workflow
 jobs:
+
+  # First job
   job-1:
+    # Run this job on a GitHub-hosted Ubuntu machine
     runs-on: ubuntu-latest
+
+    # Steps execute sequentially within this job
     steps:
+      # First step
       - name: Step 1
         run: echo "Hello from Step 1"
+
+      # Second step runs after Step 1 succeeds
       - name: Step 2
         run: echo "Hello from Step 2"
 
+  # Second job
   job-2:
+    # This job also gets its own GitHub-hosted Ubuntu machine
     runs-on: ubuntu-latest
+
     steps:
+      # First step in job-2
       - name: Final Step
         run: echo "Hello from Final Step - Job-2"
+
+      # Second step in job-2 runs after Final Step succeeds
       - name: Another step
         run: echo "Hello Srikanth"

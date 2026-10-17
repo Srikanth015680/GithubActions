@@ -1,16 +1,35 @@
 
+# Name displayed in the GitHub Actions tab
 name: "02-Understanding Events"
 
+# Define the events that trigger this workflow
 on:
+  # Run when code is pushed to the repository
   push:
+
+  # Allow you to start the workflow manually from GitHub
   workflow_dispatch:
+
+  # Run when a pull request event occurs
   pull_request:
+
+  # Run the workflow automatically based on a cron schedule
   schedule:
+    # Run every 5 minutes (GitHub schedule times use UTC)
     - cron: "*/5 * * * *"
 
+# Define the jobs to execute
 jobs:
+  # Unique identifier for this job
   event-info-job:
+
+    # Use a GitHub-hosted Ubuntu virtual machine
     runs-on: ubuntu-latest
+
+    # Steps executed by this job
     steps:
-      - name: Print Trigger name
+      # Name shown for this step in the workflow logs
+      - name: Print Trigger Name
+
+        # Print the event name using the GitHub context
         run: echo "My Trigger event is ${{ github.event_name }}"

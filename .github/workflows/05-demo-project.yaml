@@ -1,35 +1,52 @@
 
+# Name displayed in the GitHub Actions tab
 name: "Docker Build Push and Test"
 
+# Events that trigger this workflow
 on:
+  # Run whenever code is pushed
   push:
+
+  # Allow manual execution from GitHub Actions
   workflow_dispatch:
 
+# Define the workflow jobs
 jobs:
+  # Unique job identifier
   docker-pipeline:
+    # Use a GitHub-hosted Ubuntu runner
     runs-on: ubuntu-latest
 
+    # Steps execute sequentially within this job
     steps:
-      # 1. Checkout Repository
+      # 1. Download repository files to the runner
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Login to Docker Hub
+      # 2. Authenticate with Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
+          # Docker Hub username stored in GitHub Secrets
           username: ${{ secrets.DOCKERHUB_USERNAME }}
+
+          # Docker Hub access token stored securely in GitHub Secrets
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 3. Build and Push Docker Image
+      # 3. Build the Docker image and push it to Docker Hub
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v6
         with:
+          # Directory containing the Dockerfile and build files
           context: .
+
+          # Publish the image to Docker Hub
           push: true
+
+          # Image repository and tag
           tags: banothsrikanth015/node-app-practice:latest
 
-      # 4. Run Container
+      # 4. Start a container from the published image
       - name: Run Container
         run: |
           docker run -d \
@@ -37,17 +54,25 @@ jobs:
             -p 5000:5000 \
             banothsrikanth015/node-app-practice:latest
 
-      # 5. Quick Smoke Test
+      # 5. Check whether the application responds successfully
       - name: Quick Smoke Test
         run: |
+          # Retry up to 10 times, waiting 3 seconds between attempts
           for i in {1..10}; do
+
+            # Send an HTTP request and fail on HTTP error responses
             if curl --fail http://localhost:5000/health; then
               echo "Health check passed!"
               exit 0
             fi
+
+            # Give the application more time to start
             sleep 3
           done
 
+          # If all attempts fail, print container logs
           echo "Health check failed!"
           docker logs my-node-container
+
+          # Mark the workflow step as failed
           exit 1

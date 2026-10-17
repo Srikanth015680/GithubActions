@@ -1,17 +1,29 @@
 
+# Name displayed in the GitHub Actions tab
 name: Ignore Demo
 
+# Configure the events that trigger the workflow
 on:
+  # Trigger on pushes, except those excluded below
   push:
+    # Ignore pushes to branches matching these patterns
     branches-ignore:
       - "experimental/*"
       - "temp/*"
+
+    # Ignore pushes when all changed files match these patterns
     paths-ignore:
       - "**/*.md"
       - "docs/**"
 
+# Define the jobs to execute
 jobs:
   demo:
+    # Run the job on a GitHub-hosted Ubuntu runner
     runs-on: ubuntu-latest
+
+    # Steps executed sequentially
     steps:
-      - run: echo "Workflow triggered!"
+      # Print a message when the workflow runs
+      - name: Print Trigger Message
+        run: echo "Workflow triggered!"

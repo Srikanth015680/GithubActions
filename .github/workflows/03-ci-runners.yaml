@@ -1,46 +1,60 @@
-# name: 03 - Understanding Runners
 
-# on: push
+# Name displayed in the GitHub Actions tab
+name: "04 - Understanding Runners (Win + Ubuntu)"
 
-# jobs:
-#   runner-info:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Print Runner Details
-#         run: |
-#           echo "Workflow is executing on a GitHub-hosted runner."
-#           echo "Runner Name: $RUNNER_NAME"
-#           echo "Runner OS: $RUNNER_OS"
-#           echo "Runner Architecture: $RUNNER_ARCH"
-
-
-
-name: 04 - Understanding Runners (Win + Ubuntu)
-
+# Trigger the workflow whenever code is pushed
 on: push
 
+# Define the jobs to execute
 jobs:
+
+  # First job: run on an Ubuntu machine
   ubuntu-runner:
+    # Use a GitHub-hosted Ubuntu virtual machine
     runs-on: ubuntu-latest
 
+    # Define the steps for the Ubuntu job
     steps:
+      # Display the runner information in the logs
       - name: Print Ubuntu Runner Details
+
+        # Execute multiple shell commands
         run: |
+          # Print a message identifying the runner
           echo "Workflow is executing on a GitHub-hosted Ubuntu runner."
+
+          # Print the runner's name
           echo "Runner Name: $RUNNER_NAME"
+
+          # Print the operating system
           echo "Runner OS: $RUNNER_OS"
+
+          # Print the CPU architecture
           echo "Runner Architecture: $RUNNER_ARCH"
 
+  # Second job: run on a Windows machine
   windows-runner:
+    # Use a GitHub-hosted Windows virtual machine
     runs-on: windows-latest
 
+    # Define the steps for the Windows job
     steps:
+      # Display the runner information in the logs
       - name: Print Windows Runner Details
+
+        # Use Bash instead of the default PowerShell shell
         shell: bash
 
+        # Execute multiple Bash commands
         run: |
+          # Print a message identifying the runner
           echo "Workflow is executing on a GitHub-hosted Windows runner."
+
+          # Print the runner's name
           echo "Runner Name: $RUNNER_NAME"
+
+          # Print the operating system
           echo "Runner OS: $RUNNER_OS"
+
+          # Print the CPU architecture
           echo "Runner Architecture: $RUNNER_ARCH"

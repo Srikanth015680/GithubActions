@@ -1,49 +1,46 @@
 
-# name: Activity Types Demo
-
-# on:
-#   pull_request:
-#     types: [opened, synchronize, reopened]
-#     branches: [main]
-
-# jobs:
-#   demo:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Print Message
-#         run: echo "Pull request activity detected!"
-
-
-
-
-
+# Name displayed in the GitHub Actions tab
 name: Filters and Activity Types Demo
 
+# Define the events that trigger this workflow
 on:
+  # Trigger when a pull request has one of the specified activities
   pull_request:
+    # Run when a PR is opened, receives new commits, or is reopened
     types: [opened, synchronize, reopened]
+
+    # Only consider PRs targeting the main branch
     branches: [main]
 
+  # Also trigger when code is pushed
   push:
+    # Allow pushes to these branches
     branches:
       - main
       - develop
+
+    # At least one changed file must match these paths
     paths:
       - "backend/**"
       - "frontend/**"
       - "Dockerfile"
       - ".github/workflows/**"
 
+# Define the jobs to execute
 jobs:
   demo:
+    # Run on a GitHub-hosted Ubuntu runner
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Download the repository contents
       - name: Checkout Repository
         uses: actions/checkout@v6
 
+      # 2. Display which event triggered the workflow
       - name: Print Event Name
         run: echo "Event is ${{ github.event_name }}"
 
+      # 3. Print a confirmation message
       - name: Print Message
         run: echo "Workflow triggered successfully!"

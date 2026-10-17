@@ -1,18 +1,31 @@
 
+# Name displayed in the GitHub Actions tab
 name: Filter Demo
 
+# Trigger configuration
 on:
+  # Run when code is pushed
   push:
+    # The push must target one of these branches
     branches:
       - "develop"
       - "release/*"
+
+    # At least one changed file must match these paths too
     paths:
       - "app/**"
       - "docker/**"
       - ".github/workflows/**"
 
+# Define the workflow jobs
 jobs:
+  # Unique job identifier
   demo:
+    # Run on a GitHub-hosted Ubuntu machine
     runs-on: ubuntu-latest
+
+    # Steps executed by this job
     steps:
-      - run: echo "Workflow triggered!"
+      # Print a message in the workflow logs
+      - name: Print Trigger Message
+        run: echo "Workflow triggered!"

@@ -1,8 +1,24 @@
-name: "01 -Understanding Contexts"
+
+# Name displayed in the GitHub Actions tab
+name: "01 - Understanding Contexts"
+
+# Trigger this workflow whenever code is pushed
 on: push
+
+# Define the jobs that the workflow will execute
 jobs:
-    event-info-job:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Print Trigger name
-              run: echo "My Tigger event is ${{github.event_name}}"
+
+  # Unique identifier for this job
+  event-info-job:
+
+    # Run the job on a GitHub-hosted Ubuntu virtual machine
+    runs-on: ubuntu-latest
+
+    # Steps run in order within this job
+    steps:
+
+      # Display the name of the event that triggered the workflow
+      - name: Print Trigger Name
+
+        # Run a shell command and insert the event name using a GitHub context
+        run: echo "My Trigger event is ${{ github.event_name }}"
