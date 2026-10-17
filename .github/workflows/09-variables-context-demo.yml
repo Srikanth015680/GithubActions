@@ -1,0 +1,63 @@
+
+# Workflow name shown in the GitHub Actions tab
+name: Variables and Context Demo
+
+# Events that trigger this workflow
+on:
+  push:                 # Run when code is pushed
+  workflow_dispatch:    # Allow manual execution
+
+# Workflow-level environment variables
+# Available to all jobs and steps unless overridden
+env:
+  APP_NAME: ShopFlow
+  APP_PORT: 3000
+
+# Define workflow jobs
+jobs:
+  demo:
+    # Use a GitHub-hosted Ubuntu runner
+    runs-on: ubuntu-latest
+
+    # Job-level environment variable
+    # Available to every step in this job unless overridden
+    env:
+      ENVIRONMENT: development
+
+    steps:
+      # Download repository code to the runner
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # EXAMPLE 1: Read environment variables in shell commands
+      - name: Print Variables
+        # Step-level variable: available only in this step
+        env:
+          GREETING: "Hello Srikanth"
+        run: |
+          echo "Application: $APP_NAME"
+          echo "Port: $APP_PORT"
+          echo "Environment: $ENVIRONMENT"
+          echo "$GREETING"
+
+      # EXAMPLE 2: Use GitHub context expressions
+      - name: Print GitHub Context
+        run: |
+          echo "Repository: ${{ github.repository }}"
+          echo "Owner: ${{ github.repository_owner }}"
+          echo "Branch or ref: ${{ github.ref }}"
+          echo "Commit SHA: ${{ github.sha }}"
+          echo "Event: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+
+      # EXAMPLE 3: Use runner context expressions
+      - name: Print Runner Context
+        run: |
+          echo "Operating System: ${{ runner.os }}"
+          echo "Runner Name: ${{ runner.name }}"
+
+      # EXAMPLE 4: Use an expression as a condition
+      # Run this step only when the branch is main
+      - name: Check Main Branch
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: echo "This run is for the main branch!"
